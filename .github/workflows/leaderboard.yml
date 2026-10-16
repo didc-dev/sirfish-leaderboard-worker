@@ -1,0 +1,42 @@
+name: Leaderboard
+
+# Every 5 minutes: read the lot's public weekly table and, only when the ranking changed,
+# republish the Sir Fish building with the new board. The Project 0 key is the P0_KEY secret.
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: leaderboard
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Fonts and Pillow
+        run: |
+          sudo apt-get install -y -qq fonts-liberation2 >/dev/null
+          python3 -m pip install --quiet pillow
+      - name: Check ranking and publish if changed
+        env:
+          P0_KEY: ${{ secrets.P0_KEY }}
+        run: node worker/worker.mjs --once
+      - name: Save published state
+        run: |
+          if ! git diff --quiet -- worker/state.json; then
+            git config user.name "leaderboard-bot"
+            git config user.email "leaderboard-bot@users.noreply.github.com"
+            git add worker/state.json
+            git commit -m "Leaderboard published"
+            git push
+          fi

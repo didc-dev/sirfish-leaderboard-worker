@@ -1,0 +1,13 @@
+{
+  "lot": 3613,
+  "baseDir": "../exterior/base",
+  "boardMaterial": "Stone",
+  "boardTexture": "board",
+  "keyFile": "%USERPROFILE%/.p0/project0.key",
+  "places": 5,
+  "manifest": {
+    "name": "Sir Fish: Tower of the Abyss",
+    "description": "A 1-4 player underwater roguelite. Climb the tower, draft abilities, beat the guardians. This week's top climbers are on the board. Fly up and press Enter to play."
+  },
+  "intervalSeconds": 60
+}

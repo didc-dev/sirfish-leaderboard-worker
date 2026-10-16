@@ -1,0 +1,26 @@
+{
+ "materials": {
+  "Glow": {
+   "surface": "glow.glsl",
+   "glow": 1.6,
+   "uniforms": {
+    "pulse": 0
+   }
+  },
+  "Stone": {
+   "surface": "stone.glsl",
+   "glow": 0.2,
+   "textures": {
+    "board": "board.png"
+   }
+  },
+  "Coral": {
+   "surface": "coral.glsl",
+   "glow": 0.6
+  },
+  "Gold": {
+   "glow": 0
+  }
+ },
+ "script": "build.js"
+}
