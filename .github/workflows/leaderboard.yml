@@ -5,7 +5,12 @@ name: Leaderboard
 on:
   schedule:
     - cron: "*/5 * * * *"
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Publish even if the ranking did not change"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -30,7 +35,14 @@ jobs:
       - name: Check ranking and publish if changed
         env:
           P0_KEY: ${{ secrets.P0_KEY }}
-        run: node worker/worker.mjs --once
+        run: node worker/worker.mjs --once ${{ inputs.force && '--force' || '' }}
+      - name: Upload board image
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: board
+          path: worker/stage/board.png
+          if-no-files-found: ignore
       - name: Save published state
         run: |
           if ! git diff --quiet -- worker/state.json; then
