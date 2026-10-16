@@ -9,7 +9,7 @@ import math
 import sys
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
-W, H = 1024, 792  # panel on the building is 3.1 x 2.4 m
+W, H = 1024, 832  # panel area on the building is 2.95 x 2.4 m
 FONTS = "C:/Windows/Fonts/"
 GOLD = (255, 214, 102)
 GOLD_DARK = (176, 122, 32)
@@ -71,7 +71,8 @@ def frame(d):
 
 
 def fmt(n):
-    return f"{n:,}".replace(",", " ")
+    # same as the lot panel: 1,504,807
+    return f"{n:,}"
 
 
 def render(data, out):
@@ -105,8 +106,8 @@ def render(data, out):
         d.text((140, cy), owner["name"][:18], font=name_f, fill=GOLD, anchor="lm")
         tag_x = 150 + d.textlength(owner["name"][:18], font=name_f)
         d.text((tag_x, cy + 2), "owner", font=small_f, fill=(170, 190, 225), anchor="lm")
-        d.text((W - 440, cy), f"Floor {owner['floor']}", font=num_f, fill=(150, 220, 255), anchor="lm")
-        d.text((W - 84, cy), fmt(owner["points"]), font=num_f, fill=GOLD, anchor="rm")
+        d.text((W - 480, cy), f"Floor {owner['floor']}", font=num_f, fill=(150, 220, 255), anchor="lm")
+        d.text((W - 84, cy), fmt(owner["score"]), font=num_f, fill=GOLD, anchor="rm")
         top += step
     if not rows and not owner:
         gold_text(img, (W // 2, H // 2 + 10), "A new week begins", font("georgiab.ttf", 44))
@@ -123,8 +124,8 @@ def render(data, out):
             d.text((98, cy), str(i + 1), font=font("georgiab.ttf", 26), fill=TEXT, anchor="mm")
         name = r["name"][:18]
         d.text((140, cy), name, font=name_f, fill=MEDALS[i] if i < 3 else TEXT, anchor="lm")
-        d.text((W - 440, cy), f"Floor {r['floor']}", font=num_f, fill=(150, 220, 255), anchor="lm")
-        d.text((W - 84, cy), fmt(r["points"]), font=num_f, fill=GOLD, anchor="rm")
+        d.text((W - 480, cy), f"Floor {r['floor']}", font=num_f, fill=(150, 220, 255), anchor="lm")
+        d.text((W - 84, cy), fmt(r["score"]), font=num_f, fill=GOLD, anchor="rm")
     foot = f"Updated {data.get('updated', '')}  -  week ends {data.get('weekEnds', '')}  -  press Enter to climb"
     d.text((W // 2, H - 40), foot, font=small_f, fill=(170, 190, 225), anchor="mm")
     img.convert("RGB").save(out, optimize=True)
